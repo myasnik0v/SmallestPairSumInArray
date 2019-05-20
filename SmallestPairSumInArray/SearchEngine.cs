@@ -16,14 +16,16 @@ namespace SmallestPairSumInArray
         /// <returns></returns>
         public Result<(int, int)> SearchSmallestPair(int[] input)
         {
-            var validationResult = ValidateInput(input);
+            IValuesProvider valuesProvider = ValuesProvider.Create(input);
+
+            var validationResult = ValidateInput(valuesProvider);
             if (validationResult.IsFailure)
                 return Result.Fail<(int, int)>(validationResult.Error);
 
             int first = int.MaxValue;
             var second = int.MaxValue;
 
-            foreach (var item in input)
+            foreach (var item in valuesProvider.Values)
             {
                 if (item < first)
                 {
@@ -47,9 +49,9 @@ namespace SmallestPairSumInArray
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        private Result ValidateInput(int[] input)
+        private Result ValidateInput(IValuesProvider valuesProvider)
         {
-            return input.Length < 2
+            return valuesProvider.ItemsCount < 2
                 ? Result.Fail("The array must contain at least two elements.")
                 : Result.Ok();
         }
